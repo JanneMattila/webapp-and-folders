@@ -5,6 +5,9 @@ namespace WebApp.Models
 {
     public class GetFilesResponse
     {
+        [JsonPropertyName("server")]
+        public string Server { get; set; }
+
         [JsonPropertyName("files")]
         public List<string> Files { get; set; }
 

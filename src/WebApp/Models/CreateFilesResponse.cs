@@ -4,6 +4,9 @@ namespace WebApp.Models
 {
     public class CreateFilesResponse
     {
+        [JsonPropertyName("server")]
+        public string Server { get; set; }
+
         [JsonPropertyName("path")]
         public string Path { get; set; }
 

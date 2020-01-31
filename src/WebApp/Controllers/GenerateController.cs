@@ -24,6 +24,7 @@ namespace WebApp.Controllers
             var response = new CreateFilesResponse
             {
                 Path = request.Path,
+                Server = Environment.MachineName,
                 FilesCreated = await CreateStructure(request.Path, request.Folders, request.SubFolders, request.FilesPerFolder, request.FileSize)
             };
             return response;

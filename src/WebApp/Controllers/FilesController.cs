@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.IO;
 using WebApp.Models;
 
@@ -25,7 +26,11 @@ namespace WebApp.Controllers
             };
             
             var entries = Directory.EnumerateFileSystemEntries(request.Path, request.Filter, options);
-            var response = new GetFilesResponse();
+            var response = new GetFilesResponse()
+            {
+                Server = Environment.MachineName
+            };
+
             foreach (var entry in entries)
             {
                 response.Files.Add(entry);
@@ -34,10 +39,15 @@ namespace WebApp.Controllers
         }
 
         [HttpDelete]
-        public ActionResult Delete(GetFilesRequest request)
+        public GetFilesResponse Delete(GetFilesRequest request)
         {
+            var response = new GetFilesResponse()
+            {
+                Server = Environment.MachineName
+            };
+
             Directory.Delete(request.Path, request.Recursive);
-            return Ok();
+            return response;
         }
     }
 }
