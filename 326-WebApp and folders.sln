@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{7E9AF29F-12C1-405A-8B40-0041179DEBEC}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		api.http = api.http
 		README.md = README.md
 	EndProjectSection
 EndProject

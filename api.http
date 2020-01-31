@@ -1,0 +1,17 @@
+@endpoint = https://localhost:32768
+
+### Get files
+POST {{endpoint}}/api/files HTTP/1.1
+
+{
+    "path": "/home",
+    "recursive": true
+}
+
+### Generate files
+POST {{endpoint}}/api/generate HTTP/1.1
+
+{
+    "path": "/home",
+    "count": 100
+}
