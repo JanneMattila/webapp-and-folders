@@ -19,7 +19,7 @@ stages:
         repository: $(repository)
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
-        buildContext: '/'
+        buildContext:
         tags: |
           $(Build.BuildNumber)
           latest
