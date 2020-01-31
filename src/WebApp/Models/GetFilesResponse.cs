@@ -6,11 +6,11 @@ namespace WebApp.Models
     public class GetFilesResponse
     {
         [JsonPropertyName("files")]
-        public List<FileModel> Files { get; set; }
+        public List<string> Files { get; set; }
 
         public GetFilesResponse()
         {
-            Files = new List<FileModel>();
+            Files = new List<string>();
         }
     }
 }

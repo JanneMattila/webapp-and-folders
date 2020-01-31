@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.IO;
 using WebApp.Models;
 
 namespace WebApp.Controllers
@@ -18,8 +19,17 @@ namespace WebApp.Controllers
         [HttpPost]
         public GetFilesResponse Post(GetFilesRequest request)
         {
+            var options = new EnumerationOptions()
+            {
+                RecurseSubdirectories = request.Recursive
+            };
+            
+            var entries = Directory.EnumerateFileSystemEntries(request.Path, request.Filter, options);
             var response = new GetFilesResponse();
-            response.Files.Add(new FileModel() { Name = "placeholder.txt" });
+            foreach (var entry in entries)
+            {
+                response.Files.Add(entry);
+            }
             return response;
         }
     }
