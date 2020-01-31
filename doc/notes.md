@@ -17,5 +17,13 @@ Tests with App Service when generating 2430 files:
 | `Premium` storage with quota `1000 GiB` as `Mount storage (Preview)` | ~2 minutes | ~1 minutes 20 seconds  |
 
 Comments:
-1) App Service pricing tier didn't had noticable impact (Basic and P2V2 was tested).
-2) Premium storage with different quotas didn't have noticable impact.
+1) App Service pricing tier didn't had noticeable impact (Basic and P2V2 was tested).
+2) Premium storage with different quotas didn't have noticeable impact.
+
+# How to test
+
+Deploy `jannemattila/webapp-fs-tester` from Docker Hub to your App 
+Service (or create your own image using source from this repo).
+Then add different `Mount storage (Preview)` based on our test scenarios.
+
+You can use Visual Studio Code and Rest Client extension with this example test file [api.http](../api.http).
