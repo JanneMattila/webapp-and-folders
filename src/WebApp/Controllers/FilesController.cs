@@ -32,5 +32,12 @@ namespace WebApp.Controllers
             }
             return response;
         }
+
+        [HttpDelete]
+        public ActionResult Delete(GetFilesRequest request)
+        {
+            Directory.Delete(request.Path, request.Recursive);
+            return Ok();
+        }
     }
 }

@@ -4,7 +4,10 @@ namespace WebApp.Models
 {
     public class CreateFilesResponse
     {
-        [JsonPropertyName("count")]
-        public int Count { get; set; }
+        [JsonPropertyName("path")]
+        public string Path { get; set; }
+
+        [JsonPropertyName("filesCreated")]
+        public int FilesCreated { get; set; }
     }
 }
