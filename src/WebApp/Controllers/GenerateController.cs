@@ -5,7 +5,7 @@ using WebApp.Models;
 namespace WebApp.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class GenerateController : ControllerBase
     {
         private readonly ILogger<GenerateController> _logger;
@@ -16,7 +16,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public CreateFilesResponse Get(CreateFilesRequest request)
+        public CreateFilesResponse Post(CreateFilesRequest request)
         {
             var response = new CreateFilesResponse();
             return response;
