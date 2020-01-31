@@ -1,4 +1,4 @@
-@endpoint = https://localhost:32768
+@endpoint = http://localhost:32771
 
 ### Get files
 POST {{endpoint}}/api/files HTTP/1.1
@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
     "path": "/home",
-    "recursive": false,
+    "recursive": true,
     "filter": "*"
 }
 
@@ -25,8 +25,8 @@ Content-Type: application/json
 
 {
     "path": "/home/a",
-    "folders": 2,
-    "subFolders": 3,
+    "folders": 3,
+    "subFolders": 5,
     "filesPerFolder": 10,
     "fileSize": 1024
 }
