@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -7,6 +8,7 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
+    [Produces("application/json")]
     [ApiController]
     [Route("api/[controller]")]
     public class GenerateController : ControllerBase
@@ -19,6 +21,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(CreateFilesResponse), StatusCodes.Status200OK)]
         public async Task<CreateFilesResponse> Post(CreateFilesRequest request)
         {
             var response = new CreateFilesResponse

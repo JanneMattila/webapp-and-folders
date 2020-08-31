@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -21,13 +22,26 @@ namespace WebApp.Controllers
         /// <summary>
         /// Find files and folders from filesystem.
         /// </summary>
+        /// <remarks>
+        /// Example find request:
+        ///
+        ///     POST /api/files
+        ///     {
+        ///       "path": "/mnt/azure/folder",
+        ///       "filter": "*",
+        ///       "recursive": true
+        ///     }
+        ///
+        /// </remarks>
         /// <param name="request">Find files and folders definition</param>
         /// <returns>Files and folders found</returns>
         /// <response code="200">Returns files and folders found</response>
         /// <response code="400">If request parameters are incorrectly defined</response>  
+        /// <response code="500">If filesystem errors occur</response>  
         [HttpPost]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(GetFilesResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ObjectResult Post(GetFilesRequest request)
         {
             if (request is null || request.Path is null)
@@ -50,7 +64,7 @@ namespace WebApp.Controllers
             {
                 RecurseSubdirectories = request.Recursive
             };
-            
+
             var entries = Directory.EnumerateFileSystemEntries(request.Path, request.Filter, options);
             var response = new GetFilesResponse()
             {

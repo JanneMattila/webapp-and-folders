@@ -66,7 +66,10 @@ namespace WebApp
 
             app.UseAuthorization();
 
-            app.UseSwagger();
+            app.UseSwagger(c =>
+            {
+                c.SerializeAsV2 = true;
+            });
 
             app.UseSwaggerUI(c =>
             {
