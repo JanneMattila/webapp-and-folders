@@ -6,6 +6,7 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
+    [Produces("application/json")]
     [ApiController]
     [Route("api/[controller]")]
     public class FilesController : ControllerBase
@@ -17,9 +18,34 @@ namespace WebApp.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Find files and folders from filesystem.
+        /// </summary>
+        /// <param name="request">Find files and folders definition</param>
+        /// <returns>Files and folders found</returns>
+        /// <response code="200">Returns files and folders found</response>
+        /// <response code="400">If request parameters are incorrectly defined</response>  
         [HttpPost]
-        public GetFilesResponse Post(GetFilesRequest request)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public ObjectResult Post(GetFilesRequest request)
         {
+            if (request is null || request.Path is null)
+            {
+                var problemDetail = new ProblemDetails
+                {
+                    Status = 400,
+                    Title = "Invalid request",
+                    Detail = "Request",
+                    Instance = "https://api.contoso.com/errors/400"
+                };
+
+                return new ObjectResult(problemDetail)
+                {
+                    StatusCode = problemDetail.Status
+                };
+            }
+
             var options = new EnumerationOptions()
             {
                 RecurseSubdirectories = request.Recursive
@@ -35,7 +61,7 @@ namespace WebApp.Controllers
             {
                 response.Files.Add(entry);
             }
-            return response;
+            return new ObjectResult(response);
         }
 
         [HttpDelete]
