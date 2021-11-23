@@ -2,7 +2,7 @@ variables:
   repository: 'jannemattila/webapp-fs-tester'
 
 trigger:
-- master
+- main
 - develop
 
 name: 1.0.$(Rev:r)
