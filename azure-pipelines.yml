@@ -5,7 +5,7 @@ trigger:
 - main
 - develop
 
-name: 1.0.$(Rev:r)
+name: 1.1.$(Rev:r)
 stages:
 - stage: Build
   jobs:
