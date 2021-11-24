@@ -1,61 +1,59 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.IO;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using WebApp.Models;
 
-namespace WebApp.Controllers
+namespace WebApp.Controllers;
+
+[Produces("application/json")]
+[ApiController]
+[Route("api/[controller]")]
+public class GenerateController : ControllerBase
 {
-    [Produces("application/json")]
-    [ApiController]
-    [Route("api/[controller]")]
-    public class GenerateController : ControllerBase
+    private readonly ILogger<GenerateController> _logger;
+
+    public GenerateController(ILogger<GenerateController> logger)
     {
-        private readonly ILogger<GenerateController> _logger;
+        _logger = logger;
+    }
 
-        public GenerateController(ILogger<GenerateController> logger)
+    [HttpPost]
+    [ProducesResponseType(typeof(CreateFilesResponse), StatusCodes.Status200OK)]
+    public async Task<CreateFilesResponse> Post(CreateFilesRequest request)
+    {
+        var time = Stopwatch.StartNew();
+        var filesCreated = await CreateStructure(request.Path, request.Folders, request.SubFolders, request.FilesPerFolder, request.FileSize);
+        var response = new CreateFilesResponse
         {
-            _logger = logger;
-        }
+            Path = request.Path,
+            Server = Environment.MachineName,
+            FilesCreated = filesCreated,
+            Milliseconds = time.Elapsed.TotalMilliseconds
+        };
+        return response;
+    }
 
-        [HttpPost]
-        [ProducesResponseType(typeof(CreateFilesResponse), StatusCodes.Status200OK)]
-        public async Task<CreateFilesResponse> Post(CreateFilesRequest request)
+    private async Task<int> CreateStructure(string path, int folders, int subFolders, int filesPerFolder, int fileSize)
+    {
+        if (subFolders > 0)
         {
-            var response = new CreateFilesResponse
+            var filesCreated = 0;
+            for (int i = 1; i <= folders; i++)
             {
-                Path = request.Path,
-                Server = Environment.MachineName,
-                FilesCreated = await CreateStructure(request.Path, request.Folders, request.SubFolders, request.FilesPerFolder, request.FileSize)
-            };
-            return response;
-        }
-
-        private async Task<int> CreateStructure(string path, int folders, int subFolders, int filesPerFolder, int fileSize)
-        {
-            if (subFolders > 0)
-            {
-                var filesCreated = 0;
-                for (int i = 1; i <= folders; i++)
-                {
-                    var childPath = Path.Combine(path, i.ToString());
-                    Directory.CreateDirectory(childPath);
-                    filesCreated += await CreateStructure(childPath, folders, subFolders - 1, filesPerFolder, fileSize);
-                }
-                return filesCreated;
+                var childPath = Path.Combine(path, i.ToString());
+                Directory.CreateDirectory(childPath);
+                filesCreated += await CreateStructure(childPath, folders, subFolders - 1, filesPerFolder, fileSize);
             }
-            else
+            return filesCreated;
+        }
+        else
+        {
+            var bytes = new byte[fileSize];
+            for (int i = 1; i <= filesPerFolder; i++)
             {
-                var bytes = new byte[fileSize];
-                for (int i = 1; i <= filesPerFolder; i++)
-                {
-                    var file = Path.Combine(path, $"{i}.txt");
-                    await System.IO.File.WriteAllBytesAsync(file, bytes);
-                }
-                return filesPerFolder;
+                var file = Path.Combine(path, $"{i}.txt");
+                await System.IO.File.WriteAllBytesAsync(file, bytes);
             }
+            return filesPerFolder;
         }
     }
 }

@@ -1,26 +1,56 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
-namespace WebApp
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+builder.Services.AddSwaggerGen(c =>
 {
-    public class Program
+    c.SwaggerDoc("v1", new OpenApiInfo
     {
-        public static void Main(string[] args)
+        Version = "v1",
+        Title = "Files and folders API",
+        Description = "Play around with file and folder performance test using these APIs",
+        TermsOfService = new Uri("https://api.contoso.com/terms"),
+        License = new OpenApiLicense
         {
-            CreateHostBuilder(args).Build().Run();
+            Name = "Use under MIT",
+            Url = new Uri("https://opensource.org/licenses/MIT"),
         }
+    });
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+    // Set the comments path for the Swagger JSON and UI.
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
+
+var app = builder.Build();
+if (builder.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
 }
+
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.UseSwagger(c =>
+{
+    c.SerializeAsV2 = true;
+});
+
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Files and folders API");
+});
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+
+await app.RunAsync();

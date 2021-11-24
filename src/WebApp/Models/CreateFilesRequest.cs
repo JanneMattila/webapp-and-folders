@@ -1,22 +1,21 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace WebApp.Models
+namespace WebApp.Models;
+
+public class CreateFilesRequest
 {
-    public class CreateFilesRequest
-    {
-        [JsonPropertyName("path")]
-        public string Path { get; set; }
+    [JsonPropertyName("path")]
+    public string Path { get; set; }
 
-        [JsonPropertyName("folders")]
-        public int Folders { get; set; }
+    [JsonPropertyName("folders")]
+    public int Folders { get; set; }
 
-        [JsonPropertyName("subFolders")]
-        public int SubFolders { get; set; }
+    [JsonPropertyName("subFolders")]
+    public int SubFolders { get; set; }
 
-        [JsonPropertyName("filesPerFolder")]
-        public int FilesPerFolder { get; set; }
+    [JsonPropertyName("filesPerFolder")]
+    public int FilesPerFolder { get; set; }
 
-        [JsonPropertyName("fileSize")]
-        public int FileSize { get; set; }
-    }
+    [JsonPropertyName("fileSize")]
+    public int FileSize { get; set; }
 }

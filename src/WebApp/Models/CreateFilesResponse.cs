@@ -1,16 +1,18 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace WebApp.Models
+namespace WebApp.Models;
+
+public class CreateFilesResponse
 {
-    public class CreateFilesResponse
-    {
-        [JsonPropertyName("server")]
-        public string Server { get; set; }
+    [JsonPropertyName("server")]
+    public string Server { get; set; }
 
-        [JsonPropertyName("path")]
-        public string Path { get; set; }
+    [JsonPropertyName("path")]
+    public string Path { get; set; }
 
-        [JsonPropertyName("filesCreated")]
-        public int FilesCreated { get; set; }
-    }
+    [JsonPropertyName("filesCreated")]
+    public int FilesCreated { get; set; }
+
+    [JsonPropertyName("milliseconds")]
+    public double Milliseconds { get; set; }
 }
