@@ -18,16 +18,15 @@ public class UploadController : ControllerBase
     /// <summary>
     /// Upload file.
     /// </summary>
-    /// <param name="file">Uploaded file</param>
     /// <returns>Number of bytes uploaded</returns>
     /// <response code="200">Returns number of bytes uploaded</response>
     [HttpPost]
     [ProducesResponseType(typeof(UploadResponse), StatusCodes.Status200OK)]
-    public ActionResult Post(IFormFile file)
+    public ActionResult Post()
     {
         return new OkObjectResult(new UploadResponse()
         {
-            Size = file.Length
+            Size = Request.ContentLength.Value
         });
     }
 }
