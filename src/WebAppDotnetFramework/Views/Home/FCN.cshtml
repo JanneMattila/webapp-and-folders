@@ -19,9 +19,10 @@
         .GetField("_FCNMode", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase)
         .GetValue(fileChangesMonitor);
 
-    var dirs = (Hashtable)fileChangesMonitor.GetType()
+    var dirs = fileChangesMonitor.GetType()
         .GetField("_dirs", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase)
-        .GetValue(fileChangesMonitor);
+        .GetValue(fileChangesMonitor) as Hashtable;
+    dirs = dirs ?? new Hashtable();
 
     var dirMonAppPathInternal = fileChangesMonitor.GetType()
         .GetField("_dirMonAppPathInternal", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase)
@@ -63,7 +64,7 @@
         <div>
             <h3>FCN Mode</h3>
             <ul>
-                <li>This process started:  @startTime</li>
+                <li>This process started:  @WebApiApplication.Started</li>
             </ul>
             <ul>
                 <li>This is the detected FCN Mode: @fcnVal</li>

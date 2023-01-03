@@ -15,5 +15,10 @@ namespace WebAppDotnetFramework.Controllers
         {
             return View();
         }
+
+        public ActionResult Uptime()
+        {
+            return View(WebApiApplication.Started);
+        }
     }
 }
