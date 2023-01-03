@@ -65,6 +65,21 @@ Example deployment log 2:
 
 This deployment updated `web.config` file and the app pool was recycled and also `\Views\Home\Uptime.cshtml` changes were reflected for the end users.
 
+Example deployment log 3:
+
+```text
+2>Start Web Deploy Publish the Application/package to https://webappfilesandfolders0000010.scm.azurewebsites.net/msdeploy.axd?site=webappfilesandfolders0000010 ...
+2>Adding ACLs for path (webappfilesandfolders0000010)
+2>Adding ACLs for path (webappfilesandfolders0000010)
+2>Updating file (webappfilesandfolders0000010\Content\Site.css).
+2>Adding ACLs for path (webappfilesandfolders0000010)
+2>Adding ACLs for path (webappfilesandfolders0000010)
+2>Publish Succeeded.
+2>Web App was published successfully https://webappfilesandfolders0000010.azurewebsites.net/
+```
+
+This deployment updated only `\Content\Site.css` and it's reflected to the end users without application restart (it's static file and not compiled resource).
+
 ## Links
 
 https://techcommunity.microsoft.com/t5/iis-support-blog/troubleshooting-performance-problems-related-to-application/ba-p/1131600
