@@ -31,10 +31,23 @@ azcopy copy /home/user/blobtemp "https://<accountname>.blob.core.windows.net/dem
 Download the files using the API:
 
 ```powershell
-curl --request GET --url 'https://webappfileblob-abc123.northeurope-01.azurewebsites.net/api/downloadblob?container=demo1&path=blobtemp/500MB.bin' --output 500MB.bin
-curl --request GET --url 'https://webappfileblob-abc123.northeurope-01.azurewebsites.net/api/downloadblob?container=demo1&path=blobtemp/500MB.bin.256' --output 500MB.bin.sha256
+# Localhost version
+curl --request GET --url 'https://localhost:5001/api/blob?container=demo1&path=blobtemp/500MB.bin' --output 500MB.bin
+curl --request GET --url 'https://localhost:5001/api/blob?container=demo1&path=blobtemp/500MB.bin.256' --output 500MB.bin.sha256
+
+# App Service version
+curl --request GET --url 'https://webappfileblob-abc123.northeurope-01.azurewebsites.net/api/blob?container=demo1&path=blobtemp/500MB.bin' --output 500MB.bin
+curl --request GET --url 'https://webappfileblob-abc123.northeurope-01.azurewebsites.net/api/blob?container=demo1&path=blobtemp/500MB.bin.256' --output 500MB.bin.sha256
 
 # Check the hash
 cat 500MB.bin.sha256
 Get-FileHash -Path 500MB.bin -Algorithm SHA256
+```
+
+## Upload file to blob using web page Blob via streaming
+
+Web page chunks the file and sends it to the server.
+
+```
+https://localhost:5001/upload.html
 ```

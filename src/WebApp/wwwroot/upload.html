@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html>
+
+<body>
+    <h2>Blob upload Demo</h2>
+    <script>
+        let _chunkSize = 1_048_576;
+
+        let _container = "";
+        let _path = "";
+        let _currentChunk = 0;
+        let _totalChunks = 0;
+
+        const log = (message) => {
+            const logElement = document.getElementById("log");
+            logElement.innerHTML += message + "<br/>";
+        }
+
+        const sendFileChunk = async (file, start, end) => {
+            var formData = new FormData();
+            var data = file.slice(start, end);
+            formData.append("container", _container);
+            formData.append("path", _path);
+            formData.append("currentChunk", _currentChunk);
+            formData.append("totalChunks", _totalChunks);
+            formData.append("data", data, file.name);
+
+            const response = await fetch("/api/blob", {
+                method: "POST",
+                body: formData,
+                // headers: {
+                //     // 'Content-Type': 'multipart/form-data'
+                // }
+            });
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log(responseData);
+            }
+            else {
+                const responseText = await response.text();
+                throw new Error(`${response.status}: ${responseText}`);
+            }
+        }
+
+        const sendFileAsChunks = async (file) => {
+            while (_currentChunk != _totalChunks) {
+                log(`Sending ${_currentChunk} / ${_totalChunks}`);
+
+                if (_currentChunk < _totalChunks) {
+                    let start = _currentChunk * _chunkSize;
+                    let bytesRemaining = file.size - _currentChunk * _chunkSize;
+                    let bytesToSend = Math.min(bytesRemaining, _chunkSize);
+
+                    await sendFileChunk(file, start, start + bytesToSend);
+                }
+
+                _currentChunk++;
+            }
+        }
+
+        const postForm = async () => {
+            try {
+                document.getElementById("log").innerHTML = "";
+                const filesElement = document.getElementById("files");
+                if (filesElement.files.length === 0) {
+                    log("No files selected");
+                    return;
+                }
+
+                log("Starting upload");
+                _container = document.getElementById("container").value;
+                const path = document.getElementById("path").value;
+
+                const inputs = document.getElementsByTagName("input");
+                for (const input of inputs) {
+                    input.disabled = "disabled";
+                }
+
+                log("Number of files to upload: " + filesElement.files.length);
+
+                for (let i = 0; i < filesElement.files.length; i++)
+                {
+                    const file = filesElement.files[i];
+                    console.log(file);
+
+                    _path = `${path}/${file.name}`;
+
+                    _currentChunk = 0;
+                    _totalChunks = Math.ceil(file.size / _chunkSize);
+                    log(`Uploading ${file.name} to path ${_path} in ${_totalChunks} chunks`);
+                    log(`To download this file using curl:`);
+                    log(`curl --request GET --url '${location.origin}/api/blob?container=${_container}&path=${_path}' --output ${file.name}`);
+                    await sendFileAsChunks(file);
+                }
+
+                for (const input of inputs) {
+                    input.disabled = "";
+                }
+
+                log("Upload completed");
+            } catch (error) {
+                console.error(error);
+                log(`${error.name}: ${error.message}`);
+            }
+        }
+    </script>
+
+    <div id="fields">
+        <form id="form">
+
+            <label for="container">Blob container:</label><br>
+            <input type="text" id="container" value="demo1"><br>
+
+            <label for="path">Blob folder:</label><br>
+            <input type="text" id="path" value="upload"><br>
+
+            <label for="file">Files to upload:</label><br>
+            <input type="file" id="files" name="file" multiple><br>
+
+            <input type="button" value="Submit" onclick="postForm()">
+        </form>
+    </div>
+
+    <div id="log">
+    </div>
+
+</body>
+
+</html>

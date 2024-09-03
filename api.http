@@ -32,4 +32,4 @@ Content-Type: application/json
 }
 
 ###
-GET {{endpoint}}/api/downloadblob?container=demo1&path=test.txt HTTP/1.1
+GET {{endpoint}}/api/blob?container=demo1&path=test.txt HTTP/1.1
