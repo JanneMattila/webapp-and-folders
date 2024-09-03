@@ -16,12 +16,10 @@ public class BlobController : ControllerBase
     private readonly ILogger<BlobController> _logger;
     private readonly BlobServiceClient _blobServiceClient;
 
-    public BlobController(ILogger<BlobController> logger, IConfiguration config)
+    public BlobController(ILogger<BlobController> logger, BlobServiceClient blobServiceClient)
     {
         _logger = logger;
-
-        var blobUri = config["BlobUri"];
-        _blobServiceClient = new BlobServiceClient(new Uri(blobUri), new DefaultAzureCredential());
+        _blobServiceClient = blobServiceClient;
     }
 
     /// <summary>

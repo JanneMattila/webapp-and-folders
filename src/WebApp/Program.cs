@@ -1,9 +1,22 @@
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Microsoft.Extensions.Azure;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+var blobUri = builder.Configuration["BlobUri"];
+if (!string.IsNullOrEmpty(blobUri))
+{
+    builder.Services.AddAzureClients(clientBuilder =>
+    {
+        // Register clients for each service
+        clientBuilder.AddBlobServiceClient(new Uri(blobUri));
+        clientBuilder.UseCredential(new DefaultAzureCredential());
+    });
+}
 
 builder.Services.AddSwaggerGen(c =>
 {
