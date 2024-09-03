@@ -44,7 +44,7 @@ cat 500MB.bin.sha256
 Get-FileHash -Path 500MB.bin -Algorithm SHA256
 ```
 
-## Upload file to blob using web page Blob via streaming
+## Upload file to blob using web page
 
 Web page chunks the file and sends it to the server.
 
