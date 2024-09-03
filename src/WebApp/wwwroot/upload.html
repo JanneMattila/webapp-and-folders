@@ -21,19 +21,16 @@
             var data = file.slice(start, end);
             formData.append("container", _container);
             formData.append("path", _path);
-            formData.append("currentChunk", _currentChunk);
+            formData.append("currentChunk", _currentChunk+1);
             formData.append("totalChunks", _totalChunks);
             formData.append("data", data, file.name);
 
             const response = await fetch("/api/blob", {
                 method: "POST",
-                body: formData,
-                // headers: {
-                //     // 'Content-Type': 'multipart/form-data'
-                // }
+                body: formData
             });
             if (response.ok) {
-                const responseData = await response.json();
+                const responseData = await response.text();
                 console.log(responseData);
             }
             else {
@@ -44,7 +41,7 @@
 
         const sendFileAsChunks = async (file) => {
             while (_currentChunk != _totalChunks) {
-                log(`Sending ${_currentChunk} / ${_totalChunks}`);
+                log(`Sending ${_currentChunk+1} / ${_totalChunks}`);
 
                 if (_currentChunk < _totalChunks) {
                     let start = _currentChunk * _chunkSize;
