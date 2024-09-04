@@ -6,7 +6,16 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Download Blob via streaming
+## Download Blob via streaming from App Service
+
+![Download Blob via streaming from App Service](https://github.com/user-attachments/assets/baf1866d-9ee9-4825-905b-9d6c434925fb)
+
+```bash
+curl \
+ --request GET \
+ --url 'https://<app>.azurewebsites.net/api/blob?container=demo1&path=upload/CompanyFinance.xlsx' \
+ --output CompanyFinance.xlsx
+```
 
 Generate large files and upload them to Blob.
 You can use Azure Cloud Shell so you don't 
@@ -44,7 +53,9 @@ cat 500MB.bin.sha256
 Get-FileHash -Path 500MB.bin -Algorithm SHA256
 ```
 
-## Upload file to blob using web page
+## Upload file to blob via App Service
+
+![Upload of large files to blob via App Service](https://github.com/user-attachments/assets/2f0ab156-f24e-4e49-9221-01b09e360c99)
 
 Web page chunks the file and sends it to the server.
 
