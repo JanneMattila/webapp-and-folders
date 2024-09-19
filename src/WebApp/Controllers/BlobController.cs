@@ -1,9 +1,6 @@
-﻿using Azure.Storage.Blobs.Models;
-using Azure.Storage.Blobs;
-using Microsoft.AspNetCore.Mvc;
-using WebApp.Models;
-using Azure.Identity;
+﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Specialized;
+using Microsoft.AspNetCore.Mvc;
 using System.Text;
 
 namespace WebApp.Controllers;
@@ -11,16 +8,10 @@ namespace WebApp.Controllers;
 [Produces("application/json")]
 [ApiController]
 [Route("api/[controller]")]
-public class BlobController : ControllerBase
+public class BlobController(ILogger<BlobController> logger, BlobServiceClient blobServiceClient) : ControllerBase
 {
-    private readonly ILogger<BlobController> _logger;
-    private readonly BlobServiceClient _blobServiceClient;
-
-    public BlobController(ILogger<BlobController> logger, BlobServiceClient blobServiceClient)
-    {
-        _logger = logger;
-        _blobServiceClient = blobServiceClient;
-    }
+    private readonly ILogger<BlobController> _logger = logger;
+    private readonly BlobServiceClient _blobServiceClient = blobServiceClient;
 
     /// <summary>
     /// Download blob from storage account.
@@ -36,13 +27,14 @@ public class BlobController : ControllerBase
     {
         var blobContainerClient = _blobServiceClient.GetBlobContainerClient(container);
         var blobClient = blobContainerClient.GetBlobClient(path);
+        var filename = Path.GetFileName(path);
 
         var blob = await blobClient.DownloadStreamingAsync(cancellationToken: cancellationToken);
-        return File(blob.Value.Content, blob.Value.Details.ContentType);
+        return File(blob.Value.Content, blob.Value.Details.ContentType, filename);
     }
 
     /// <summary>
-    /// Upload blob from storage account.
+    /// Upload blob to storage account.
     /// </summary>
     /// <param name="container">Container name</param>
     /// <param name="path">Blob path</param>
@@ -50,7 +42,7 @@ public class BlobController : ControllerBase
     /// <param name="totalChunks">Total chunks</param>
     /// <param name="data">Data stream</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Ok in successful upload</returns>
+    /// <returns>Ok if successful upload</returns>
     /// <response code="200">Returns ok</response>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]

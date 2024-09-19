@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html>
+
+<body>
+    <h2>Blob download Demo</h2>
+    <script>
+        const log = (message) => {
+            const logElement = document.getElementById("log");
+            logElement.innerHTML += message + "<br/>";
+        }
+
+        const postForm = async () => {
+            try {
+                document.getElementById("log").innerHTML = "";
+
+                const container = document.getElementById("container").value;
+                const path = document.getElementById("path").value;
+                const file = document.getElementById("file").value;
+
+                log(`Starting download of file: ${container}/${path}/${file}...`);
+                document.location.href = `/api/blob?container=${container}&path=${path}/${file}`;
+            } catch (error) {
+                console.error(error);
+                log(`${error.name}: ${error.message}`);
+            }
+        }
+    </script>
+
+    <div id="fields">
+        <form id="form">
+
+            <label for="container">Blob container:</label><br>
+            <input type="text" id="container" value="demo1"><br>
+
+            <label for="path">Blob folder:</label><br>
+            <input type="text" id="path" value="upload"><br>
+
+            <label for="file">File to download:</label><br>
+            <input type="text" id="file" name="file"><br>
+
+            <input type="button" value="Submit" onclick="postForm()">
+        </form>
+    </div>
+
+    <div id="log">
+    </div>
+
+</body>
+
+</html>
